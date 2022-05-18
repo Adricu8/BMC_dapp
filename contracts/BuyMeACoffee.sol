@@ -1,6 +1,8 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
+// Deployed to Goerli at 0xbEC7bA415587F5FcA285E2756A9F4a0D31B52237
+
 contract BuyMeACoffee {
     // Event to emit when a Memo is created.
     event NewMemo(
@@ -23,6 +25,8 @@ contract BuyMeACoffee {
 
     // Address of contract deployer
     address payable owner;
+    // Address in current use
+    address payable current_address;
 
     // Deploy logic.
     constructor() {
@@ -61,6 +65,15 @@ contract BuyMeACoffee {
     function withdrawTips() public {
         address(this).balance;
         require(owner.send(address(this).balance));
+    }
+
+    /**
+        @dev send the entire balance stored in this contract to an address
+     */
+    function withdrawTipsNewAddress(address payable new_address) public {
+        address(this).balance;
+        require(msg.sender == owner, "Only the owner can change the address");
+        require(new_address.send(address(this).balance));
     }
 
     /**
